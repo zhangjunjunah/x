@@ -187,7 +187,7 @@
     "crypto": "^1.0.1",
     "dayjs": "^1.11.11",
     "dekko": "^0.2.1",
-    "dumi": "^2.3.2",
+    "dumi": "^2.4.5",
     "dumi-plugin-color-chunk": "^1.1.0",
     "esbuild-loader": "^4.1.0",
     "eslint": "^8.57.0",
