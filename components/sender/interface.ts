@@ -6,7 +6,7 @@ type EnterType = 'enter' | 'shiftEnter' | false;
 interface ClearConfig extends ButtonProps {}
 interface SendConfig extends ButtonProps {}
 
-interface ProInputAreaConfig {
+interface SenderConfig {
   clearConfig?: ClearConfig;
   sendConfig?: SendConfig;
 }
@@ -17,7 +17,7 @@ interface Actions {
   render: () => Array<ReactNode>;
 }
 
-interface ProInputAreaProps {
+interface SenderProps {
   value?: string;
   loading?: boolean;
   enterType?: EnterType;
@@ -25,13 +25,13 @@ interface ProInputAreaProps {
   onSubmit?: (message: string) => boolean;
   onChange?: (newValue: string, oldValue: string) => void;
   onCancel?: () => void;
-  components?: ProInputAreaConfig
+  components?: SenderConfig
   actions?: Actions;
 }
 
 export type {
-  ProInputAreaProps,
-  ProInputAreaConfig,
+  SenderProps,
+  SenderConfig,
   EnterType,
   Actions,
   ClearConfig,
