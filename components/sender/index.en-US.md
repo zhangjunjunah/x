@@ -6,6 +6,8 @@ description: A input component for chat.
 cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*SMzgSJZE_AwAAAAAAAAAAAAADrJ8AQ/original
 coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*8yArQ43EGccAAAAAAAAAAAAADrJ8AQ/original
 tag: 5.10.0
+demo:
+  cols: 2
 ---
 
 ## When To Use
@@ -16,6 +18,7 @@ tag: 5.10.0
 ## Examples
 
 <!-- prettier-ignore -->
+<code src="./demo/basic.tsx">Basic</code>
 <code src="./demo/basic.tsx">Basic</code>
 
 ## API

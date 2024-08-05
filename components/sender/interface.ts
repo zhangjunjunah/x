@@ -18,22 +18,26 @@ interface Actions {
 }
 
 interface SenderProps {
+  prefixCls?: string;
   value?: string;
   loading?: boolean;
   enterType?: EnterType;
   disabled?: boolean;
   onSubmit?: (message: string) => boolean;
-  onChange?: (newValue: string, oldValue: string) => void;
+  onChange?: (value: string) => void;
   onCancel?: () => void;
-  components?: SenderConfig
+  components?: SenderConfig;
   actions?: Actions;
-}
+  styles?: {
+    input?: React.CSSProperties;
+    actions?: React.CSSProperties;
+  };
+  rootClassName?: string;
+  className?: {
+    input?: string;
+    actions?: string;
+  };
+  style?: React.CSSProperties;
+} 
 
-export type {
-  SenderProps,
-  SenderConfig,
-  EnterType,
-  Actions,
-  ClearConfig,
-  SendConfig,
-};
+export type { SenderProps, SenderConfig, EnterType, Actions, ClearConfig, SendConfig };
