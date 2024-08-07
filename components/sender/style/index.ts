@@ -27,16 +27,24 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
       display: 'flex',
       width: '100%',
 
+      [`&${componentCls}-rtl`]: {
+        direction: 'rtl',
+
+        [`& ${componentCls}-actions-list`]: {
+          left: '8px',
+          right: 'auto',
+        },
+      },
+
       [`& ${componentCls}-actions-list`]: {
         borderRadius: '8px',
         position: 'absolute',
         zIndex: zIndexPopupBase + 1000,
         right: '8px',
-        bottom: `${paddingXS-paddingXXS}px`,
+        bottom: `${paddingXS - paddingXXS}px`,
       },
 
       [`& ${componentCls}-actions-btn`]: {
-
         color: colorTextTertiary,
         [`&:hover`]: {
           color: colorTextSecondary,
@@ -51,9 +59,6 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
         boxShadow: boxShadowSecondary,
         paddingTop: paddingXS,
         paddingBottom: paddingXS,
-      },
-      [`&${componentCls}-rtl`]: {
-        direction: 'rtl',
       },
     },
   };

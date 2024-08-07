@@ -10,34 +10,46 @@ import useConfigContext from '../config-provider/useConfigContext';
 import { useMergedState } from 'rc-util';
 import StopLoadingIcon from './StopLoading';
 
-const Sender: React.FC<Readonly<TextAreaProps & SenderProps>> = (props) => {
+const Sender: React.FC<Readonly<SenderProps>> = (props) => {
   const {
     prefixCls: customizePrefixCls,
     styles,
     className,
     rootClassName,
     style,
+    value,
     placeholder,
     onSubmit = () => {},
     loading: outLoading,
+    onCancel,
     onChange,
+    actions,
     ...rest
   } = props;
-
   const { direction, getPrefixCls } = useConfigContext();
   const isChineseInput = useRef(false);
-
   const prefixCls = getPrefixCls('sender', customizePrefixCls);
   const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
-
   const mergedCls = classnames(className, rootClassName, prefixCls, hashId, cssVarCls, {
     [`${prefixCls}-rtl`]: direction === 'rtl',
   });
-
   const [message, setMessage] = useState('');
+
+  // support chinese input
+  useEffect(() => {
+    if (!isChineseInput.current && onChange) {
+      onChange(message);
+    }
+  }, [message]);
+  useEffect(() => {
+    if (value) {
+      setMessage(value);
+    }
+  }, [value]);
 
   const [loading, setLoading] = useMergedState<boolean>(false, {
     value: outLoading,
+    onChange: onCancel,
   });
 
   const send = () => {
@@ -64,13 +76,6 @@ const Sender: React.FC<Readonly<TextAreaProps & SenderProps>> = (props) => {
     [loading, message],
   );
 
-  // support chinese input
-  useEffect(() => {
-    if (!isChineseInput.current && onChange) {
-      onChange(message);
-    }
-  }, [message]);
-
   const defaultInputTextAreaProps: TextAreaProps = {
     placeholder: placeholder || 'Please enter a message...',
     style: styles?.input,
@@ -96,20 +101,33 @@ const Sender: React.FC<Readonly<TextAreaProps & SenderProps>> = (props) => {
     ...rest,
   };
 
+  const ActionsList = () => {
+    const { clear, send: sendConfig, render } = actions || {};
+    const ClearButton = (
+      <Button
+        icon={<ClearOutlined />}
+        type="text"
+        className={`${prefixCls}-actions-btn`}
+        onClick={() => {
+          setMessage('');
+        }}
+        {...clear}
+      />
+    );
+
+    const SendButton = <Button {...defaultButtonProps} {...sendConfig} />;
+
+    return (
+      <Space className={`${prefixCls}-actions-list`}>
+        {render ? render([ClearButton, SendButton]) : [ClearButton, SendButton]}
+      </Space>
+    );
+  };
+
   return wrapCSSVar(
     <div className={mergedCls} style={style}>
       <Input.TextArea {...defaultInputTextAreaProps} />
-      <Space className={`${prefixCls}-actions-list`}>
-        <Button
-          icon={<ClearOutlined />}
-          type="text"
-          className={`${prefixCls}-actions-btn`}
-          onClick={() => {
-            setMessage('');
-          }}
-        />
-        <Button {...defaultButtonProps} />
-      </Space>
+      <ActionsList />
     </div>,
   );
 };
