@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { OpenAIOutlined } from '@ant-design/icons';
 
 const App: React.FC = () => {
-  const OutLink = <Button type="dashed" icon={<OpenAIOutlined />} />;
+  const openailink = <Button type="dashed" icon={<OpenAIOutlined />} />;
   const [loading, setLoading] = React.useState(true);
   return (
     <Sender
@@ -28,7 +28,7 @@ const App: React.FC = () => {
         },
         render: ([clear, load, send]) => {
           if (loading) {
-            return [clear, OutLink, load];
+            return [clear, openailink, load];
           }
           return [clear, send];
         },
