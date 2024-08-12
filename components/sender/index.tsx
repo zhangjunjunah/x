@@ -1,10 +1,11 @@
 import { Button, Input, Space } from 'antd';
+import type { ButtonProps } from 'antd';
 import type { TextAreaProps } from 'antd/lib/input/TextArea';
 import classnames from 'classnames';
 import { ClearOutlined, SendOutlined } from '@ant-design/icons';
 
 import useStyle from './style';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { SenderProps } from './interface';
 import useConfigContext from '../config-provider/useConfigContext';
 import { useMergedState } from 'rc-util';
@@ -19,7 +20,8 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
     style,
     value,
     placeholder,
-    onSubmit = () => {},
+    enterType = 'enter',
+    onSubmit,
     loading: outLoading,
     onCancel,
     onChange,
@@ -49,35 +51,49 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
 
   const [loading, setLoading] = useMergedState<boolean>(false, {
     value: outLoading,
-    onChange: onCancel,
+    onChange: (flag)=>{
+      if (!flag && onCancel) {
+        onCancel();
+      }
+    },
   });
 
   const send = () => {
     setLoading(true);
     setMessage('');
-    onSubmit(message);
+    if (onSubmit) {
+      onSubmit(message);
+    }
   };
 
-  const defaultButtonProps = useMemo(
-    () =>
-      loading
-        ? ({
-            type: 'text',
-            className: `${prefixCls}-actions-btn`,
-            onClick: () => setLoading(false),
-            icon: <StopLoadingIcon />,
-          } as const)
-        : ({
-            type: 'text',
-            className: `${prefixCls}-actions-btn`,
-            onClick: send,
-            icon: <SendOutlined />,
-          } as const),
-    [loading, message],
-  );
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (loading || isChineseInput.current) {
+      return;
+    }
+
+    // 根据 enterType 判断是否触发 send
+    switch (enterType) {
+      case 'enter':
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault(); 
+          send(); 
+        }
+        break;
+      case 'shiftEnter':
+        if (e.key === 'Enter' && e.shiftKey) {
+          e.preventDefault(); 
+          send(); 
+        }
+        break;
+      case false:
+        break;
+      default:
+        break;
+    }
+  };
 
   const defaultInputTextAreaProps: TextAreaProps = {
-    placeholder: placeholder || 'Please enter a message...',
+    placeholder,
     style: styles?.input,
     className: classnames(`${prefixCls}-inputarea`, className?.input),
     autoSize: { maxRows: 8 },
@@ -92,22 +108,21 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
       isChineseInput.current = false;
       setMessage((e.target as EventTarget & HTMLTextAreaElement)?.value);
     },
-    onPressEnter: (e) => {
-      if (!loading && !e.shiftKey && !isChineseInput.current) {
-        e.preventDefault();
-        send();
-      }
-    },
+    onPressEnter: handleKeyPress,
     ...rest,
   };
 
   const ActionsList = () => {
-    const { clear, send: sendConfig, render } = actions || {};
+    const { clear, send: sendConfig, load, render } = actions || {};
+
+    const buttonDefaultConfig: ButtonProps = {
+      type: 'text',
+      className: `${prefixCls}-actions-btn`,
+    };
     const ClearButton = (
       <Button
         icon={<ClearOutlined />}
-        type="text"
-        className={`${prefixCls}-actions-btn`}
+        {...buttonDefaultConfig}
         onClick={() => {
           setMessage('');
         }}
@@ -115,11 +130,24 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
       />
     );
 
-    const SendButton = <Button {...defaultButtonProps} {...sendConfig} />;
+    const LoadingButton = (
+      <Button
+        {...buttonDefaultConfig}
+        onClick={() => setLoading(false)}
+        icon={<StopLoadingIcon />}
+        {...load}
+      />
+    );
+
+    const SenderButton = (
+      <Button {...buttonDefaultConfig} onClick={send} icon={<SendOutlined />} {...sendConfig} />
+    );
 
     return (
       <Space className={`${prefixCls}-actions-list`}>
-        {render ? render([ClearButton, SendButton]) : [ClearButton, SendButton]}
+        {render
+          ? render([ClearButton, LoadingButton, SenderButton])
+          : [ClearButton, loading ? LoadingButton : SenderButton]}
       </Space>
     );
   };

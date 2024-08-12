@@ -20,6 +20,7 @@ demo:
 <code src="./demo/basic.tsx">Basic</code>
 <code src="./demo/loading.tsx">Loading</code>
 <code src="./demo/actions.tsx">Actions</code>
+<code src="./demo/enterType.tsx">entry type</code>
 <code src="./demo/controlled.tsx">controlled</code>
 <code src="./demo/rtl.tsx">rtl</code>
 

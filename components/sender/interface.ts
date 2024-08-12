@@ -2,20 +2,23 @@ import type { ButtonProps } from 'antd';
 import type { ReactNode } from 'react';
 import type { TextAreaProps } from 'antd/lib/input/TextArea';
 
-type EnterType = 'enter' | 'shiftEnter' | false;
+type EnterType = 'enter' | 'shiftEnter' | string |false;
 
 interface ClearConfig extends ButtonProps {}
 interface SendConfig extends ButtonProps {}
+interface LoadingConfig extends ButtonProps {}
 
 interface SenderConfig {
   clearConfig?: ClearConfig;
   sendConfig?: SendConfig;
+  loadingConfig?: LoadingConfig;
 }
 
 interface Actions {
   send?: SendConfig;
   clear?: ClearConfig;
-  render?: ([clearButton, sendButton]: Array<ReactNode>) => Array<ReactNode>;
+  load?: LoadingConfig;
+  render?: ([clearButton, lodingButton, sendButton]: Array<ReactNode>) => Array<ReactNode>;
 }
 
 type SenderProps = Omit<TextAreaProps, 'onChange'> & {

@@ -19,6 +19,7 @@ tag: 5.10.0
 <code src="./demo/basic.tsx">Basic</code>
 <code src="./demo/loading.tsx">加载中</code>
 <code src="./demo/actions.tsx">按钮配置</code>
+<code src="./demo/enterType.tsx">输入模式</code>
 <code src="./demo/controlled.tsx">受控模式</code>
 <code src="./demo/rtl.tsx">从右到左布局</code>
 
