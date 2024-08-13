@@ -77,7 +77,6 @@
     "prepublishOnly": "tsx ./scripts/pre-publish.ts",
     "prettier": "prettier -c --write **/* --cache",
     "pub": "echo 'Please use `npm publish` instead.'",
-    "postpublish": "tsx scripts/post-publish.ts",
     "presite": "npm run prestart",
     "site": "npm i --no-save --legacy-peer-deps react@18.3.0-canary-c3048aab4-20240326 react-dom@18.3.0-canary-c3048aab4-20240326 && dumi build && cp .surgeignore _site",
     "size-limit": "size-limit",
