@@ -1,13 +1,43 @@
 import React from 'react';
 import { Sender } from '@ant-design/x';
-import { Button } from 'antd';
-import { OpenAIOutlined } from '@ant-design/icons';
+import { Button, Spin } from 'antd';
+import { DeleteFilled, OpenAIOutlined } from '@ant-design/icons';
 
 const App: React.FC = () => {
-  const openailink = <Button type="dashed" icon={<OpenAIOutlined />} />;
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+  const [value, setValue] = React.useState<string>('');
+  const openailink = (
+    <Button
+      type="dashed"
+      onClick={() => {
+        setLoading(true);
+        setValue('');
+      }}
+      icon={<OpenAIOutlined />}
+    />
+  );
+  const ClearMessage = (
+    <Button
+      type="dashed"
+      onClick={() => {
+        setValue('');
+      }}
+      icon={<DeleteFilled />}
+    />
+  );
+  const LoadingSpin = (
+    <Button
+      type="dashed"
+      icon={<Spin />}
+      onClick={() => {
+        setLoading(false);
+      }}
+    />
+  );
   return (
     <Sender
+      value={value}
+      onChange={setValue}
       loading={loading}
       onSubmit={(message) => {
         console.log('submit', message);
@@ -17,20 +47,11 @@ const App: React.FC = () => {
       onCancel={() => {
         setLoading(false);
       }}
-      actions={{
-        clear: {
-          type: 'default',
-        },
-        send: {
-          style: {
-            border: '1px solid #1890ff',
-          },
-        },
-        render: ([clear, load, send]) => {
-          if (loading) {
-            return [clear, openailink, load];
-          }
-          return [clear, send];
+      components={{
+        actions: {
+          send: () => openailink,
+          clear: () => ClearMessage,
+          loading: () => LoadingSpin,
         },
       }}
     />

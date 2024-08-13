@@ -1,27 +1,23 @@
-import type { ButtonProps } from 'antd';
-import type { ReactNode } from 'react';
-import type { TextAreaProps } from 'antd/lib/input/TextArea';
+type EnterType = 'enter' | 'shiftEnter' | string | false;
 
-type EnterType = 'enter' | 'shiftEnter' | string |false;
+type Component<P> =
+  | React.ComponentType<P>
+  | React.ForwardRefExoticComponent<P>
+  | React.FC<P>
+  | keyof React.ReactHTML;
 
-interface ClearConfig extends ButtonProps {}
-interface SendConfig extends ButtonProps {}
-interface LoadingConfig extends ButtonProps {}
-
-interface SenderConfig {
-  clearConfig?: ClearConfig;
-  sendConfig?: SendConfig;
-  loadingConfig?: LoadingConfig;
+export type CustomizeComponent = Component<any>;
+interface SenderComponents {
+  actions: {
+    wrapper?: CustomizeComponent;
+    clear?: CustomizeComponent;
+    send?: CustomizeComponent;
+    loading?: CustomizeComponent;
+  };
+  input?: CustomizeComponent;
 }
 
-interface Actions {
-  send?: SendConfig;
-  clear?: ClearConfig;
-  load?: LoadingConfig;
-  render?: ([clearButton, lodingButton, sendButton]: Array<ReactNode>) => Array<ReactNode>;
-}
-
-type SenderProps = Omit<TextAreaProps, 'onChange'> & {
+type SenderProps = {
   prefixCls?: string;
   value?: string;
   loading?: boolean;
@@ -30,8 +26,7 @@ type SenderProps = Omit<TextAreaProps, 'onChange'> & {
   onSubmit?: (message: string) => boolean;
   onChange?: (value: string) => void;
   onCancel?: () => void;
-  components?: SenderConfig;
-  actions?: Actions;
+  components?: SenderComponents;
   styles?: {
     input?: React.CSSProperties;
     actions?: React.CSSProperties;
@@ -44,4 +39,9 @@ type SenderProps = Omit<TextAreaProps, 'onChange'> & {
   style?: React.CSSProperties;
 };
 
-export type { SenderProps, SenderConfig, EnterType, Actions, ClearConfig, SendConfig };
+export type GetComponent = (
+  path: readonly string[],
+  defaultComponent?: CustomizeComponent,
+) => CustomizeComponent;
+
+export type { SenderProps, EnterType };

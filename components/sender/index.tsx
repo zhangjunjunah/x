@@ -6,9 +6,10 @@ import { ClearOutlined, SendOutlined } from '@ant-design/icons';
 
 import useStyle from './style';
 import React, { useEffect, useRef, useState } from 'react';
-import type { SenderProps } from './interface';
+import type { GetComponent, SenderProps } from './interface';
 import useConfigContext from '../config-provider/useConfigContext';
 import { useMergedState } from 'rc-util';
+import getValue from 'rc-util/lib/utils/get';
 import StopLoadingIcon from './StopLoading';
 
 const Sender: React.FC<Readonly<SenderProps>> = (props) => {
@@ -19,13 +20,12 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
     rootClassName,
     style,
     value,
-    placeholder,
     enterType = 'enter',
     onSubmit,
     loading: outLoading,
+    components,
     onCancel,
     onChange,
-    actions,
     ...rest
   } = props;
   const { direction, getPrefixCls } = useConfigContext();
@@ -51,7 +51,7 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
 
   const [loading, setLoading] = useMergedState<boolean>(false, {
     value: outLoading,
-    onChange: (flag)=>{
+    onChange: (flag) => {
       if (!flag && onCancel) {
         onCancel();
       }
@@ -60,10 +60,10 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
 
   const send = () => {
     setLoading(true);
-    setMessage('');
     if (onSubmit) {
       onSubmit(message);
     }
+    setMessage('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -75,14 +75,14 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
     switch (enterType) {
       case 'enter':
         if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault(); 
-          send(); 
+          e.preventDefault();
+          send();
         }
         break;
       case 'shiftEnter':
         if (e.key === 'Enter' && e.shiftKey) {
-          e.preventDefault(); 
-          send(); 
+          e.preventDefault();
+          send();
         }
         break;
       case false:
@@ -93,7 +93,6 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
   };
 
   const defaultInputTextAreaProps: TextAreaProps = {
-    placeholder,
     style: styles?.input,
     className: classnames(`${prefixCls}-inputarea`, className?.input),
     autoSize: { maxRows: 8 },
@@ -112,49 +111,50 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
     ...rest,
   };
 
+  const getComponent = React.useCallback<GetComponent>(
+    (path, defaultComponent) => getValue(components, path) || defaultComponent,
+    [components],
+  );
+
+  const buttonDefaultConfig: ButtonProps = {
+    type: 'text',
+    className: `${prefixCls}-actions-btn`,
+  };
+  const SenderButton = () => (
+    <Button onClick={send} icon={<SendOutlined />} {...buttonDefaultConfig} />
+  );
+  const ClearButton = () => (
+    <Button
+      icon={<ClearOutlined />}
+      {...buttonDefaultConfig}
+      onClick={() => {
+        setMessage('');
+      }}
+    />
+  );
+
+  const LoadingButton = () => (
+    <Button onClick={() => setLoading(false)} icon={<StopLoadingIcon />} {...buttonDefaultConfig} />
+  );
   const ActionsList = () => {
-    const { clear, send: sendConfig, load, render } = actions || {};
-
-    const buttonDefaultConfig: ButtonProps = {
-      type: 'text',
-      className: `${prefixCls}-actions-btn`,
-    };
-    const ClearButton = (
-      <Button
-        icon={<ClearOutlined />}
-        {...buttonDefaultConfig}
-        onClick={() => {
-          setMessage('');
-        }}
-        {...clear}
-      />
-    );
-
-    const LoadingButton = (
-      <Button
-        {...buttonDefaultConfig}
-        onClick={() => setLoading(false)}
-        icon={<StopLoadingIcon />}
-        {...load}
-      />
-    );
-
-    const SenderButton = (
-      <Button {...buttonDefaultConfig} onClick={send} icon={<SendOutlined />} {...sendConfig} />
-    );
+    const ActionsWapper = getComponent(['actions', 'wrapper'], Space);
+    const SenderButtonComponent = getComponent(['actions', 'send'], SenderButton);
+    const ClearButtonComponent = getComponent(['actions', 'clear'], ClearButton);
+    const LoadingButtonComponent = getComponent(['actions', 'loading'], LoadingButton);
 
     return (
-      <Space className={`${prefixCls}-actions-list`}>
-        {render
-          ? render([ClearButton, LoadingButton, SenderButton])
-          : [ClearButton, loading ? LoadingButton : SenderButton]}
-      </Space>
+      <ActionsWapper className={`${prefixCls}-actions-list`}>
+        <ClearButtonComponent />
+        {loading ? <LoadingButtonComponent /> : <SenderButtonComponent />}
+      </ActionsWapper>
     );
   };
 
+  const InputTextArea = getComponent(['input'], ()=><Input.TextArea {...defaultInputTextAreaProps}/>);
+
   return wrapCSSVar(
     <div className={mergedCls} style={style}>
-      <Input.TextArea {...defaultInputTextAreaProps} />
+      <InputTextArea/>
       <ActionsList />
     </div>,
   );
