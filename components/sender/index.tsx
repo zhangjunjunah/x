@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { ClearOutlined, SendOutlined } from '@ant-design/icons';
 
 import useStyle from './style';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import type { GetComponent, SenderProps } from './interface';
 import useConfigContext from '../config-provider/useConfigContext';
 import { useMergedState } from 'rc-util';
@@ -25,29 +25,24 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
     loading: outLoading,
     components,
     onCancel,
-    onChange,
+    onChange: outOnChange,
     ...rest
   } = props;
   const { direction, getPrefixCls } = useConfigContext();
-  const isChineseInput = useRef(false);
   const prefixCls = getPrefixCls('sender', customizePrefixCls);
+  const isChineseInput = useRef(false);
   const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
   const mergedCls = classnames(className, rootClassName, prefixCls, hashId, cssVarCls, {
     [`${prefixCls}-rtl`]: direction === 'rtl',
   });
-  const [message, setMessage] = useState('');
-
-  // support chinese input
-  useEffect(() => {
-    if (!isChineseInput.current && onChange) {
-      onChange(message);
-    }
-  }, [message]);
-  useEffect(() => {
-    if (value) {
-      setMessage(value);
-    }
-  }, [value]);
+  const [message, setMessage] = useMergedState('', {
+    value,
+    onChange: (val) => {
+      if (isChineseInput! && outOnChange) {
+        outOnChange(val);
+      }
+    },
+  });
 
   const [loading, setLoading] = useMergedState<boolean>(false, {
     value: outLoading,
@@ -116,45 +111,54 @@ const Sender: React.FC<Readonly<SenderProps>> = (props) => {
     [components],
   );
 
-  const buttonDefaultConfig: ButtonProps = {
+  const ActionsConfig = (config: ButtonProps) => ({
     type: 'text',
     className: `${prefixCls}-actions-btn`,
-  };
-  const SenderButton = () => (
-    <Button onClick={send} icon={<SendOutlined />} {...buttonDefaultConfig} />
-  );
-  const ClearButton = () => (
-    <Button
-      icon={<ClearOutlined />}
-      {...buttonDefaultConfig}
-      onClick={() => {
-        setMessage('');
-      }}
-    />
-  );
+    ...config,
+  });
 
-  const LoadingButton = () => (
-    <Button onClick={() => setLoading(false)} icon={<StopLoadingIcon />} {...buttonDefaultConfig} />
-  );
+  const SendConfig = ActionsConfig({
+    onClick: send,
+    icon: <SendOutlined />,
+  });
+
+  const ClearConfig = ActionsConfig({
+    onClick: () => {
+      setMessage('');
+    },
+    icon: <ClearOutlined />,
+  });
+
+  const LoadingConfig = ActionsConfig({
+    onClick: () => {
+      setLoading(false);
+    },
+    icon: <StopLoadingIcon />,
+  });
+
   const ActionsList = () => {
     const ActionsWapper = getComponent(['actions', 'wrapper'], Space);
-    const SenderButtonComponent = getComponent(['actions', 'send'], SenderButton);
-    const ClearButtonComponent = getComponent(['actions', 'clear'], ClearButton);
-    const LoadingButtonComponent = getComponent(['actions', 'loading'], LoadingButton);
+    const SenderButtonComponent = getComponent(['actions', 'send'], Button);
+    const ClearButtonComponent = getComponent(['actions', 'clear'], Button);
+    const LoadingButtonComponent = getComponent(['actions', 'loading'], Button);
 
     return (
       <ActionsWapper className={`${prefixCls}-actions-list`}>
-        <ClearButtonComponent />
-        {loading ? <LoadingButtonComponent /> : <SenderButtonComponent />}
+        <ClearButtonComponent {...ClearConfig} />
+        {loading ? (
+          <LoadingButtonComponent {...LoadingConfig} />
+        ) : (
+          <SenderButtonComponent {...SendConfig} />
+        )}
       </ActionsWapper>
     );
   };
 
-  const InputTextArea = getComponent(['input'], ()=><Input.TextArea {...defaultInputTextAreaProps}/>);
+  const InputTextArea = getComponent(['input'], Input.TextArea);
 
   return wrapCSSVar(
     <div className={mergedCls} style={style}>
-      <InputTextArea/>
+      <InputTextArea {...defaultInputTextAreaProps} />
       <ActionsList />
     </div>,
   );
