@@ -55,13 +55,19 @@ const ConversationsItem: React.FC<ConversationsItemProps> = (props) => {
     }
   };
 
+  const onOpenChange = (open: boolean) => {
+    if (open) {
+      setOpened(!open);
+    }
+  };
+
   // ============================ Render ============================
   return (
     <Tooltip
       title={info.label}
       open={inEllipsis && opened}
       onOpenChange={setOpened}
-      placement={direction === 'ltr' ? 'right' : 'left'}
+      placement={direction === 'rtl' ? 'left' : 'right'}
     >
       <li {...domProps} className={mergedCls} onClick={onInternalClick}>
         {info.icon && <div className={`${prefixCls}-icon`}>{info.icon}</div>}
@@ -76,14 +82,10 @@ const ConversationsItem: React.FC<ConversationsItemProps> = (props) => {
         {menu && !disabled && (
           <Dropdown
             menu={menu}
-            placement={direction === 'ltr' ? 'bottomRight' : 'bottomLeft'}
+            placement={direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
             trigger={['click']}
             disabled={disabled}
-            onOpenChange={(open) => {
-              if (open) {
-                setOpened(!open);
-              }
-            }}
+            onOpenChange={onOpenChange}
           >
             <MoreOutlined
               onClick={stopPropagation}
