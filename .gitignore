@@ -42,6 +42,7 @@ package-lock.json
 _site/
 server/
 
+# Docs templates
 components/version/token-meta.json
 components/version/token.json
 report.html
