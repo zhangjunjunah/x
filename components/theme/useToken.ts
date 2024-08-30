@@ -4,6 +4,7 @@ import { useCacheToken, createTheme } from '@ant-design/cssinjs';
 import { unitless, ignore } from 'antd/es/theme/useToken';
 import formatToken from 'antd/es/theme/util/alias';
 
+import { defaultPrefixCls } from '../config-provider';
 import version from '../version';
 
 import type { Theme } from '@ant-design/cssinjs';
@@ -93,8 +94,8 @@ export function useInternalToken(): [
 
   const cssVar = React.useMemo(
     () => ({
-      prefix: (typeof rootCssVar === 'object' && rootCssVar.prefix) || 'ant',
-      key: (typeof rootCssVar === 'object' && rootCssVar.key) || '1',
+      prefix: (typeof rootCssVar === 'object' && rootCssVar.prefix) || defaultPrefixCls,
+      key: (typeof rootCssVar === 'object' && rootCssVar.key) || '',
       unitless,
       ignore,
       preserve,
