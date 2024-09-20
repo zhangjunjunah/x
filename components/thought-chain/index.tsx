@@ -2,10 +2,11 @@ import classnames from 'classnames';
 import pickAttrs from 'rc-util/lib/pickAttrs';
 import React from 'react';
 
-import useConfigContext from '../config-provider/useConfigContext';
+import { useXProviderContext } from '../x-provider';
 import useCollapsible from './hooks/useCollapsible';
 import useStyle from './style';
 
+import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import ThoughtChainNode, { ThoughtChainNodeContext } from './Item';
 
 import type { ConfigProviderProps } from 'antd';
@@ -66,6 +67,7 @@ const ThoughtChain: React.FC<ThoughtChainProps> = (props) => {
     items,
     collapsible,
     styles = {},
+    style,
     classNames = {},
     size = 'middle',
     ...restProps
@@ -78,11 +80,14 @@ const ThoughtChain: React.FC<ThoughtChainProps> = (props) => {
   });
 
   // ============================ Prefix ============================
-  const { getPrefixCls, direction } = useConfigContext();
+  const { getPrefixCls, direction } = useXProviderContext();
 
   const rootPrefixCls = getPrefixCls();
 
   const prefixCls = getPrefixCls('thought-chain', customizePrefixCls);
+
+  // ===================== Component Config =========================
+  const contextConfig = useXComponentConfig('thoughtChain');
 
   // ============================ UseCollapsible ============================
   const [enableCollapse, expandedKeys, onItemExpand, collapseMotion] = useCollapsible(
@@ -98,6 +103,7 @@ const ThoughtChain: React.FC<ThoughtChainProps> = (props) => {
     className,
     rootClassName,
     prefixCls,
+    contextConfig.className,
     hashId,
     cssVarCls,
     {
@@ -108,7 +114,7 @@ const ThoughtChain: React.FC<ThoughtChainProps> = (props) => {
 
   // ============================ Render ============================
   return wrapCSSVar(
-    <div {...domProps} className={mergedCls}>
+    <div {...domProps} className={mergedCls} style={{ ...contextConfig.style, ...style }}>
       <ThoughtChainNodeContext.Provider
         value={{
           prefixCls,
@@ -116,15 +122,23 @@ const ThoughtChain: React.FC<ThoughtChainProps> = (props) => {
           collapseMotion,
           expandedKeys,
           direction,
-          classNames,
-          styles,
+          classNames: {
+            itemHeader: classnames(contextConfig.classNames.itemHeader, classNames.itemHeader),
+            itemContent: classnames(contextConfig.classNames.itemContent, classNames.itemContent),
+            itemFooter: classnames(contextConfig.classNames.itemFooter, classNames.itemFooter),
+          },
+          styles: {
+            itemHeader: { ...contextConfig.styles.itemHeader, ...styles.itemHeader },
+            itemContent: { ...contextConfig.styles.itemContent, ...styles.itemContent },
+            itemFooter: { ...contextConfig.styles.itemFooter, ...styles.itemFooter },
+          },
         }}
       >
         {items?.map((item, index) => (
           <ThoughtChainNode
             key={item.key || `key_${index}`}
-            className={classNames.item}
-            style={styles.item}
+            className={classnames(contextConfig.classNames.item, classNames.item)}
+            style={{ ...contextConfig.styles.item, ...styles.item }}
             info={{
               ...item,
               icon: item.icon || index + 1,
