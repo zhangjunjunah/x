@@ -115,21 +115,24 @@ export default function demoTest(component: string, options: Options = {}) {
 
   // Test component name is match the kebab-case
   const testName = test;
-  testName('component name is match the kebab-case', () => {
-    const kebabName = kebabCase(component);
 
-    // Path should exist
-    // eslint-disable-next-line global-require
-    const { default: Component } = require(`../../components/${kebabName}`);
+  if (!component.startsWith('use')) {
+    testName('component name is match the kebab-case', () => {
+      const kebabName = kebabCase(component);
 
-    if (options.nameCheckPathOnly !== true) {
-      expect(kebabCase(Component.displayName || '')).toEqual(kebabName);
-    }
-  });
+      // Path should exist
+      // eslint-disable-next-line global-require
+      const { default: Component } = require(`../../components/${kebabName}`);
 
-  if (options?.testRootProps !== false) {
-    rootPropsTest(component, null!, {
-      props: options?.testRootProps,
+      if (options.nameCheckPathOnly !== true) {
+        expect(kebabCase(Component.displayName || '')).toEqual(kebabName);
+      }
     });
+
+    if (options?.testRootProps !== false) {
+      rootPropsTest(component, null!, {
+        props: options?.testRootProps,
+      });
+    }
   }
 }

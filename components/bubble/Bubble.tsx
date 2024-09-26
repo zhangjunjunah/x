@@ -34,6 +34,8 @@ const Bubble: React.ForwardRefRenderFunction<BubbleRef, BubbleProps> = (props, r
     typing,
     content = '',
     messageRender,
+    variant = 'filled',
+    onTypingComplete,
     ...otherHtmlProps
   } = props;
 
@@ -68,6 +70,20 @@ const Bubble: React.ForwardRefRenderFunction<BubbleRef, BubbleProps> = (props, r
     onUpdate?.();
   }, [typedContent]);
 
+  const triggerTypingCompleteRef = React.useRef(false);
+  React.useEffect(() => {
+    if (!isTyping && !loading) {
+      // StrictMode will trigger this twice,
+      // So we need a flag to avoid that
+      if (!triggerTypingCompleteRef.current) {
+        triggerTypingCompleteRef.current = true;
+        onTypingComplete?.();
+      }
+    } else {
+      triggerTypingCompleteRef.current = false;
+    }
+  }, [isTyping, loading]);
+
   // ============================ Styles ============================
   const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
@@ -89,7 +105,7 @@ const Bubble: React.ForwardRefRenderFunction<BubbleRef, BubbleProps> = (props, r
   const avatarNode = React.isValidElement(avatar) ? avatar : <Avatar {...avatar} />;
 
   // =========================== Content ============================
-  const mergedContent = messageRender ? messageRender(typedContent) : typedContent;
+  const mergedContent = messageRender ? messageRender(typedContent as any) : typedContent;
 
   // ============================ Render ============================
   return wrapCSSVar(
@@ -127,11 +143,12 @@ const Bubble: React.ForwardRefRenderFunction<BubbleRef, BubbleProps> = (props, r
         }}
         className={classnames(
           `${prefixCls}-content`,
+          `${prefixCls}-content-${variant}`,
           contextConfig.classNames.content,
           classNames.content,
         )}
       >
-        {loading ? <Loading prefixCls={prefixCls} /> : mergedContent}
+        {loading ? <Loading prefixCls={prefixCls} /> : (mergedContent as React.ReactNode)}
       </div>
     </div>,
   );

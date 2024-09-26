@@ -1,30 +1,38 @@
-import * as React from 'react';
 import useLayoutEffect from 'rc-util/lib/hooks/useLayoutEffect';
+import * as React from 'react';
+
+function isString(str: any): str is string {
+  return typeof str === 'string';
+}
 
 /**
  * Return typed content and typing status when typing is enabled.
  * Or return content directly.
  */
 const useTypedEffect = (
-  content: string,
+  content: React.ReactNode | object,
   typingEnabled: boolean,
   typingStep: number,
   typingInterval: number,
-): [typedContent: string, isTyping: boolean] => {
-  const [prevContent, setPrevContent] = React.useState<string>('');
+): [typedContent: React.ReactNode | object, isTyping: boolean] => {
+  const [prevContent, setPrevContent] = React.useState<React.ReactNode | object>('');
   const [typingIndex, setTypingIndex] = React.useState<number>(1);
+
+  const mergedTypingEnabled = typingEnabled && isString(content);
 
   // Reset typing index when content changed
   useLayoutEffect(() => {
     setPrevContent(content);
-    if (content.indexOf(prevContent) !== 0) {
+    if (!mergedTypingEnabled && isString(content)) {
+      setTypingIndex(content.length);
+    } else if (isString(content) && isString(prevContent) && content.indexOf(prevContent) !== 0) {
       setTypingIndex(1);
     }
-  }, [content, typingEnabled]);
+  }, [content]);
 
   // Start typing
   React.useEffect(() => {
-    if (typingEnabled && typingIndex < content.length) {
+    if (mergedTypingEnabled && typingIndex < content.length) {
       const id = setTimeout(() => {
         setTypingIndex((prev) => prev + typingStep);
       }, typingInterval);
@@ -35,9 +43,9 @@ const useTypedEffect = (
     }
   }, [typingIndex, typingEnabled, content]);
 
-  const mergedTypingContent = typingEnabled ? content.slice(0, typingIndex) : content;
+  const mergedTypingContent = mergedTypingEnabled ? content.slice(0, typingIndex) : content;
 
-  return [mergedTypingContent, typingEnabled && typingIndex < content.length];
+  return [mergedTypingContent, mergedTypingEnabled && typingIndex < content.length];
 };
 
 export default useTypedEffect;

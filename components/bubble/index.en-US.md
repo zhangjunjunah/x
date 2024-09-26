@@ -21,7 +21,9 @@ Often used when chatting.
 <code src="./demo/loading.tsx">Loading</code>
 <code src="./demo/typing.tsx">Typing effect</code>
 <code src="./demo/markdown.tsx">Content render</code>
+<code src="./demo/variant.tsx">Variant</code>
 <code src="./demo/list.tsx">Bubble List</code>
+<code src="./demo/list-custom.tsx">Custom List Content</code>
 
 ## API
 
@@ -33,12 +35,14 @@ Common props ref：[Common props](/docs/react/common-props)
 | --- | --- | --- | --- | --- |
 | avatar | Avatar component | React.ReactNode | - |  |
 | classNames | Semantic DOM class | [Record<SemanticDOM, string>](#semantic-dom) | - |  |
-| styles | Semantic DOM style | [Record<SemanticDOM, CSSProperties>](#semantic-dom) | - |  |
-| placement | Direction of Message | `start` \| `end` | `start` |  |
-| loading | Loading state of Message | boolean | - |  |
-| typing | Show message with typing motion | boolean \| { step?: number, interval?: number } | false |  |
 | content | Content of bubble | string | - |  |
+| loading | Loading state of Message | boolean | - |  |
+| placement | Direction of Message | `start` \| `end` | `start` |  |
+| styles | Semantic DOM style | [Record<SemanticDOM, CSSProperties>](#semantic-dom) | - |  |
+| typing | Show message with typing motion | boolean \| { step?: number, interval?: number } | false |  |
+| variant | Style variant | `filled` \| `borderless` | `filled` |  |
 | messageRender | Display customized content | (content?: string) => ReactNode | - |  |
+| onTypingComplete | Callback when typing effect is completed. If typing is not set, it will be triggered immediately when rendering. | () => void | - |  |
 
 ### Bubble.List
 

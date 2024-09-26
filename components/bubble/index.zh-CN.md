@@ -22,7 +22,9 @@ demo:
 <code src="./demo/loading.tsx">加载中</code>
 <code src="./demo/typing.tsx">打字效果</code>
 <code src="./demo/markdown.tsx">自定义渲染</code>
+<code src="./demo/variant.tsx">变体</code>
 <code src="./demo/list.tsx">气泡列表</code>
+<code src="./demo/list-custom.tsx">自定义列表内容</code>
 
 ## API
 
@@ -34,12 +36,14 @@ demo:
 | --- | --- | --- | --- | --- |
 | avatar | 展示头像 | React.ReactNode | - |  |
 | classNames | 语义化结构 class | [Record<SemanticDOM, string>](#semantic-dom) | - |  |
-| styles | 语义化结构 style | [Record<SemanticDOM, CSSProperties>](#semantic-dom) | - |  |
-| placement | 信息位置 | `start` \| `end` | `start` |  |
-| loading | 聊天内容加载状态 | boolean | - |  |
-| typing | 设置聊天内容打字动画 | boolean \| { step?: number, interval?: number } | false |  |
 | content | 聊天内容 | string | - |  |
+| loading | 聊天内容加载状态 | boolean | - |  |
+| placement | 信息位置 | `start` \| `end` | `start` |  |
+| styles | 语义化结构 style | [Record<SemanticDOM, CSSProperties>](#semantic-dom) | - |  |
+| typing | 设置聊天内容打字动画 | boolean \| { step?: number, interval?: number } | false |  |
+| variant | 气泡样式变体 | `filled` \| `borderless` | `filled` |  |
 | messageRender | 自定义渲染内容 | (content?: string) => ReactNode | - |  |
+| onTypingComplete | 打字效果完成时的回调，如果没有设置 typing 将在渲染时立刻触发 | () => void | - |  |
 
 ### Bubble.List
 

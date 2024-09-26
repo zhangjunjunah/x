@@ -11,4 +11,6 @@ export { default as Suggestion } from './suggestion';
 export type { SuggestionProps } from './suggestion';
 export { default as XProvider } from './x-provider';
 export type { XProviderProps } from './x-provider';
+export { default as useXChat } from './useXChat';
+export { default as useXAgent } from './useXAgent';
 export { default as version } from './version';

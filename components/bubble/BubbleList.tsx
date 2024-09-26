@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useXProviderContext } from '../x-provider';
 import Bubble, { BubbleContext } from './Bubble';
 import type { BubbleRef } from './Bubble';
+import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleProps } from './interface';
 import useStyle from './style';
@@ -64,8 +65,20 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
 
   const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
+  // ============================ Typing ============================
+  const [initialized, setInitialized] = React.useState(false);
+
+  React.useEffect(() => {
+    setInitialized(true);
+    return () => {
+      setInitialized(false);
+    };
+  }, []);
+
   // ============================= Data =============================
   const mergedData = useListData(items, roles);
+
+  const [displayData, onTypingComplete] = useDisplayData(mergedData);
 
   // ============================ Scroll ============================
   // Is current scrollTop at the end. User scroll will make this false.
@@ -91,7 +104,7 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
   React.useEffect(() => {
     if (autoScroll) {
       // New date come, the origin last one is the second last one
-      const lastItemKey = mergedData[mergedData.length - 2]?.key;
+      const lastItemKey = displayData[displayData.length - 2]?.key;
       const bubbleInst = bubbleRefs.current[lastItemKey!];
 
       // Auto scroll if last 2 item is visible
@@ -107,7 +120,7 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
         }
       }
     }
-  }, [mergedData.length]);
+  }, [displayData.length]);
 
   // ========================== Outer Ref ===========================
   React.useImperativeHandle(ref, () => ({
@@ -125,8 +138,8 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
 
         if (bubbleInst) {
           // Block current auto scrolling
-          const index = mergedData.findIndex((dataItem) => dataItem.key === key);
-          setScrollReachEnd(index === mergedData.length - 1);
+          const index = displayData.findIndex((dataItem) => dataItem.key === key);
+          setScrollReachEnd(index === displayData.length - 1);
 
           // Do native scroll
           bubbleInst.nativeElement.scrollIntoView({
@@ -164,7 +177,7 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
         ref={listRef}
         onScroll={onInternalScroll}
       >
-        {mergedData.map(({ key, ...bubble }) => (
+        {displayData.map(({ key, ...bubble }) => (
           <Bubble
             {...bubble}
             key={key}
@@ -174,6 +187,11 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
               } else {
                 delete bubbleRefs.current[key];
               }
+            }}
+            typing={initialized ? bubble.typing : false}
+            onTypingComplete={() => {
+              bubble.onTypingComplete?.();
+              onTypingComplete(key);
             }}
           />
         ))}
