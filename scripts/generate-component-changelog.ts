@@ -19,7 +19,12 @@ const componentNames = globSync(
 const camelComponentNames = componentNames.map((componentName) =>
   componentName
     .split('-')
-    .map((cell) => (cell.length <= 2 ? cell.toUpperCase() : cell[0].toUpperCase() + cell.slice(1)))
+    .map((cell) => {
+      // Runtime Hook
+      if (cell.startsWith('use')) return cell;
+      // Components
+      return cell.length <= 2 ? cell.toUpperCase() : cell[0].toUpperCase() + cell.slice(1);
+    })
     .join(''),
 );
 
