@@ -22,6 +22,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*8yArQ43EGccAAA
 <code src="./demo/actions.tsx">Custom actions</code>
 <code src="./demo/header.tsx">Header panel</code>
 <code src="./demo/send-style.tsx">Adjust style</code>
+<code src="./demo/paste-image.tsx">Paste image</code>
 
 ## API
 
@@ -54,6 +55,7 @@ Common props ref：[Common props](/docs/react/common-props)
 | --- | --- | --- | --- | --- |
 | children | Panel content | ReactNode | - | - |
 | closable | Whether to close | boolean | true | - |
+| forceRender | Force render, use when need ref internal elements on init | boolean | false | - |
 | open | Whether to expand | boolean | - | - |
 | title | Title content | ReactNode | - | - |
 | onOpenChange | Callback when the expansion state changes | (open: boolean) => void | - | - |
