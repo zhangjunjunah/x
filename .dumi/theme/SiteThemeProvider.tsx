@@ -4,8 +4,6 @@ import type { ThemeProviderProps } from 'antd-style';
 import { ThemeProvider } from 'antd-style';
 import React, { useContext } from 'react';
 
-import SiteContext from './slots/SiteContext';
-
 interface NewToken {
   bannerHeight: number;
   headerHeight: number;
@@ -20,6 +18,9 @@ interface NewToken {
   codeFamily: string;
   contentMarginTop: number;
   anchorTop: number;
+  indexRadius: number;
+  pcMaxWidth: number;
+  pcContainerMargin: number;
 }
 
 // 通过给 antd-style 扩展 CustomToken 对象类型定义，可以为 useTheme 中增加相应的 token 对象
@@ -27,14 +28,15 @@ declare module 'antd-style' {
   export interface CustomToken extends NewToken {}
 }
 
-const headerHeight = 64;
+const headerHeight = 80;
 const bannerHeight = 38;
+const indexRadius = 24;
+const pcMaxWidth = 1560;
 
 const SiteThemeProvider: React.FC<ThemeProviderProps<any>> = ({ children, theme, ...rest }) => {
   const { getPrefixCls, iconPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const rootPrefixCls = getPrefixCls();
   const { token } = antdTheme.useToken();
-  const { bannerVisible } = useContext(SiteContext);
   React.useEffect(() => {
     // 需要注意与 components/config-provider/demo/holderRender.tsx 配置冲突
     ConfigProvider.config({ theme: theme as ThemeConfig });
@@ -47,6 +49,9 @@ const SiteThemeProvider: React.FC<ThemeProviderProps<any>> = ({ children, theme,
       customToken={{
         headerHeight,
         bannerHeight,
+        indexRadius,
+        pcMaxWidth,
+        pcContainerMargin: 100,
         menuItemBorder: 2,
         mobileMaxWidth: 767.99,
         siteMarkdownCodeBg: token.colorFillTertiary,
@@ -60,7 +65,7 @@ const SiteThemeProvider: React.FC<ThemeProviderProps<any>> = ({ children, theme,
         marginFar: token.marginXXL * 2,
         codeFamily: `'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace`,
         contentMarginTop: 40,
-        anchorTop: headerHeight + token.margin + (bannerVisible ? bannerHeight : 0),
+        anchorTop: headerHeight + token.margin,
       }}
     >
       {children}
