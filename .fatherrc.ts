@@ -45,8 +45,8 @@ export default defineConfig({
       '@ant-design/cssinjs': 'antdCssinjs',
       antd: 'antd',
     },
-    chainWebpack: (memo) => {
-      if (process.env.NODE_ENV === 'production') {
+    chainWebpack: (memo, { env }) => {
+      if (env === 'production') {
         memo.plugin('codecov').use(CodecovWebpackPlugin, [
           {
             enableBundleAnalysis: true,
