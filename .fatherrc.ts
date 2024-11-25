@@ -1,16 +1,12 @@
 import { codecovWebpackPlugin } from '@codecov/webpack-plugin';
+import DuplicatePackageCheckerPlugin from '@madccc/duplicate-package-checker-webpack-plugin';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { defineConfig } from 'father';
 
 class CodecovWebpackPlugin {
   private options;
   constructor(options = {}) {
-    this.options = {
-      enableBundleAnalysis: true,
-      bundleName: 'webpack-bundle',
-      gitService: 'github',
-      disable: false,
-      ...options,
-    };
+    this.options = options;
   }
   apply(compiler: any) {
     return codecovWebpackPlugin(this.options).apply(compiler);
@@ -53,6 +49,17 @@ export default defineConfig({
             bundleName: 'antdx',
             uploadToken: process.env.CODECOV_TOKEN,
             gitService: 'github',
+          },
+        ]);
+        memo.plugin('circular-dependency-checker').use(CircularDependencyPlugin, [
+          {
+            failOnError: true,
+          },
+        ]);
+        memo.plugin('duplicate-package-checker').use(DuplicatePackageCheckerPlugin, [
+          {
+            verbose: true,
+            emitError: true,
           },
         ]);
       }
