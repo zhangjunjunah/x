@@ -88,15 +88,9 @@ runs the complete test suite. (Make sure the `NODE_ENV` environment variable is 
 
 <InstallDependencies npm='$ npm test' yarn='$ yarn test'></InstallDependencies>
 
-### Compile
-
-compiles TypeScript code to the `lib` and `es` directory.
-
-<InstallDependencies npm='$ npm run compile' yarn='$ yarn compile'></InstallDependencies>
-
 ### Build
 
-creates UMD build of antd.
+Build TypeScript code to the `lib` and `es` directory, creates UMD build of antdx.
 
 <InstallDependencies npm='$ npm run dist' yarn='$ yarn dist'></InstallDependencies>
 

@@ -91,9 +91,9 @@ const runPrePublish = async () => {
   showMessage(`[CI] 正在执行 lint`, true);
   await runScript({ event: 'lint', path: '.', stdio: 'inherit' });
   showMessage(`[CI] lint 执行成功`, 'succeed');
-  showMessage(`[CI] 正在执行 compile`, true);
-  await runScript({ event: 'compile', path: '.', stdio: 'inherit' });
-  showMessage(`[CI] compile 执行成功`, 'succeed');
+  showMessage(`[CI] 正在执行 dist`, true);
+  await runScript({ event: 'dist', path: '.', stdio: 'inherit' });
+  showMessage(`[CI] dist 执行成功`, 'succeed');
   showMessage(`[CI] 正在执行 test`, true);
   await runScript({ event: 'test', path: '.', stdio: 'inherit' });
   showMessage(`[CI] test 执行成功`, 'succeed');
