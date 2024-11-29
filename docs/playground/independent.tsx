@@ -24,13 +24,6 @@ import {
   SmileOutlined,
 } from '@ant-design/icons';
 import { Badge, Button, type GetProp, Space } from 'antd';
-import { UploadChangeParam } from 'antd/es/upload';
-
-interface AttachedFile {
-  uid: string;
-  name: string;
-  size: number;
-}
 
 const renderTitle = (icon: React.ReactElement, title: string) => (
   <Space align="start">
@@ -88,9 +81,7 @@ const useStyle = createStyles(({ token, css }) => {
       flex: 1;
     `,
     placeholder: css`
-      flex: 1;
       padding-top: 32px;
-      overflow: scroll;
     `,
     sender: css`
       box-shadow: ${token.boxShadow};
@@ -206,11 +197,15 @@ const Independent: React.FC = () => {
   // ==================== State ====================
   const [headerOpen, setHeaderOpen] = React.useState(false);
 
+  const [content, setContent] = React.useState('');
+
   const [conversationsItems, setConversationsItems] = React.useState(defaultConversationsItems);
 
   const [activeKey, setActiveKey] = React.useState(defaultConversationsItems[0].key);
 
-  const [attachedFiles, setAttachedFiles] = React.useState<AttachedFile[]>([]);
+  const [attachedFiles, setAttachedFiles] = React.useState<GetProp<typeof Attachments, 'items'>>(
+    [],
+  );
 
   // ==================== Runtime ====================
   const [agent] = useXAgent({
@@ -233,6 +228,7 @@ const Independent: React.FC = () => {
   const onSubmit = (nextContent: string) => {
     if (!nextContent) return;
     onRequest(nextContent);
+    setContent('');
   };
 
   const onPromptsItemClick: GetProp<typeof Prompts, 'onItemClick'> = (info) => {
@@ -254,15 +250,10 @@ const Independent: React.FC = () => {
     setActiveKey(key);
   };
 
+  const handleFileChange: GetProp<typeof Attachments, 'onChange'> = (info) =>
+    setAttachedFiles(info.fileList);
+
   // ==================== Nodes ====================
-
-  const items: GetProp<typeof Bubble.List, 'items'> = messages.map(({ id, message, status }) => ({
-    key: id,
-    loading: status === 'loading',
-    role: status === 'local' ? 'local' : 'ai',
-    content: message,
-  }));
-
   const placeholderNode = (
     <Space direction="vertical" size={16} className={styles.placeholder}>
       <Welcome
@@ -293,26 +284,17 @@ const Independent: React.FC = () => {
     </Space>
   );
 
-  const handleFileChange = (info: UploadChangeParam) => {
-    setAttachedFiles(
-      info.fileList.map((file) => ({
-        uid: file.uid,
-        name: file.name,
-        size: file.size ?? 0,
-      })),
-    );
-  };
+  const items: GetProp<typeof Bubble.List, 'items'> = messages.map(({ id, message, status }) => ({
+    key: id,
+    loading: status === 'loading',
+    role: status === 'local' ? 'local' : 'ai',
+    content: message,
+  }));
 
   const attachmentsNode = (
-    <div>
-      <Badge dot={attachedFiles.length > 0 && !headerOpen}>
-        <Button
-          type="text"
-          icon={<PaperClipOutlined />}
-          onClick={() => setHeaderOpen(!headerOpen)}
-        />
-      </Badge>
-    </div>
+    <Badge dot={attachedFiles.length > 0 && !headerOpen}>
+      <Button type="text" icon={<PaperClipOutlined />} onClick={() => setHeaderOpen(!headerOpen)} />
+    </Badge>
   );
 
   const senderHeader = (
@@ -378,16 +360,20 @@ const Independent: React.FC = () => {
         />
       </div>
       <div className={styles.chat}>
-        {/* 🌟 欢迎占位 */}
-        {!items.length && placeholderNode}
         {/* 🌟 消息列表 */}
-        {!!items.length && <Bubble.List items={items} roles={roles} className={styles.messages} />}
+        <Bubble.List
+          items={items.length > 0 ? items : [{ content: placeholderNode, variant: 'borderless' }]}
+          roles={roles}
+          className={styles.messages}
+        />
         {/* 🌟 提示词 */}
         <Prompts items={senderPromptsItems} onItemClick={onPromptsItemClick} />
         {/* 🌟 输入框 */}
         <Sender
+          value={content}
           header={senderHeader}
           onSubmit={onSubmit}
+          onChange={setContent}
           prefix={attachmentsNode}
           loading={agent.isRequesting()}
           className={styles.sender}
