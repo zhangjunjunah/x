@@ -39,7 +39,7 @@ type useXAgent<AgentMessage> = (
 | baseURL | 请求服务端地址 | string | - |  |
 | key | 请求秘钥 | string | - |  |
 | model | 协议模型 | string | - |  |
-| dangerouslyApiKey | **启用此选项可能存在风险，会暴露您的秘密 API 凭证!** | string | - | - |
+| dangerouslyApiKey | **注意: 🔥 `dangerouslyApiKey` 存在安全风险，对此有详细的[说明](/docs/react/dangerously-api-key-cn)。** | string | - | - |
 
 ### XAgentConfigCustom
 
@@ -54,6 +54,7 @@ type useXAgent<AgentMessage> = (
 ```tsx | pure
 interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
   messages?: Message[];
+  message?: Message;
 }
 
 export type RequestFn<Message> = (
@@ -68,22 +69,7 @@ export type RequestFn<Message> = (
 
 ### Agent
 
-| 属性         | 说明                        | 类型           | 版本 |
-| ------------ | --------------------------- | -------------- | ---- |
-| request      | 调用 `useXAgent` 配置的请求 | AgentRequestFn |      |
-| isRequesting | 是否正在请求                | () => boolean  |      |
-
-```tsx | pure
-interface AgentRequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
-  messages?: Message[];
-}
-
-type AgentRequestFn<AgentMessage> = (
-  info: AgentRequestFnInfo<Message>,
-  callbacks: {
-    onUpdate: (message: AgentMessage) => void;
-    onSuccess: (message: AgentMessage) => void;
-    onError: (error: Error) => void;
-  },
-) => void;
-```
+| 属性         | 说明                        | 类型          | 版本 |
+| ------------ | --------------------------- | ------------- | ---- |
+| request      | 调用 `useXAgent` 配置的请求 | RequestFn     |      |
+| isRequesting | 是否正在请求                | () => boolean |      |

@@ -17,13 +17,13 @@ import {
   EllipsisOutlined,
   FireOutlined,
   HeartOutlined,
-  LinkOutlined,
+  PaperClipOutlined,
   PlusOutlined,
   ReadOutlined,
   ShareAltOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
-import { Button, type GetProp, Space } from 'antd';
+import { Badge, Button, type GetProp, Space } from 'antd';
 
 const renderTitle = (icon: React.ReactElement, title: string) => (
   <Space align="start">
@@ -43,8 +43,9 @@ const useStyle = createStyles(({ token, css }) => {
   return {
     layout: css`
       width: 100%;
+      min-width: 1000px;
       height: 722px;
-      border-radius: 8px;
+      border-radius: ${token.borderRadius}px;
       display: flex;
       background: ${token.colorBgContainer};
       font-family: AlibabaPuHuiTi, ${token.fontFamily}, sans-serif;
@@ -62,6 +63,7 @@ const useStyle = createStyles(({ token, css }) => {
     `,
     conversations: css`
       padding: 0 12px;
+      flex: 1;
       overflow-y: auto;
     `,
     chat: css`
@@ -72,14 +74,13 @@ const useStyle = createStyles(({ token, css }) => {
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      padding: 24px 0;
+      padding: ${token.paddingLG}px;
       gap: 16px;
     `,
     messages: css`
       flex: 1;
     `,
     placeholder: css`
-      flex: 1;
       padding-top: 32px;
     `,
     sender: css`
@@ -194,11 +195,17 @@ const Independent: React.FC = () => {
   const { styles } = useStyle();
 
   // ==================== State ====================
+  const [headerOpen, setHeaderOpen] = React.useState(false);
+
   const [content, setContent] = React.useState('');
 
   const [conversationsItems, setConversationsItems] = React.useState(defaultConversationsItems);
 
   const [activeKey, setActiveKey] = React.useState(defaultConversationsItems[0].key);
+
+  const [attachedFiles, setAttachedFiles] = React.useState<GetProp<typeof Attachments, 'items'>>(
+    [],
+  );
 
   // ==================== Runtime ====================
   const [agent] = useXAgent({
@@ -224,10 +231,6 @@ const Independent: React.FC = () => {
     setContent('');
   };
 
-  const onChange = (nextContent: string) => {
-    setContent(nextContent);
-  };
-
   const onPromptsItemClick: GetProp<typeof Prompts, 'onItemClick'> = (info) => {
     onRequest(info.data.description as string);
   };
@@ -247,15 +250,10 @@ const Independent: React.FC = () => {
     setActiveKey(key);
   };
 
+  const handleFileChange: GetProp<typeof Attachments, 'onChange'> = (info) =>
+    setAttachedFiles(info.fileList);
+
   // ==================== Nodes ====================
-
-  const items: GetProp<typeof Bubble.List, 'items'> = messages.map(({ id, message, status }) => ({
-    key: id,
-    loading: status === 'loading',
-    role: status === 'local' ? 'local' : 'ai',
-    content: message,
-  }));
-
   const placeholderNode = (
     <Space direction="vertical" size={16} className={styles.placeholder}>
       <Welcome
@@ -286,17 +284,45 @@ const Independent: React.FC = () => {
     </Space>
   );
 
+  const items: GetProp<typeof Bubble.List, 'items'> = messages.map(({ id, message, status }) => ({
+    key: id,
+    loading: status === 'loading',
+    role: status === 'local' ? 'local' : 'ai',
+    content: message,
+  }));
+
   const attachmentsNode = (
-    <Attachments
-      beforeUpload={() => false}
-      placeholder={{
-        icon: <CloudUploadOutlined />,
-        title: 'Drag & Drop files here',
-        description: 'Support file type: image, video, audio, document, etc.',
+    <Badge dot={attachedFiles.length > 0 && !headerOpen}>
+      <Button type="text" icon={<PaperClipOutlined />} onClick={() => setHeaderOpen(!headerOpen)} />
+    </Badge>
+  );
+
+  const senderHeader = (
+    <Sender.Header
+      title="Attachments"
+      open={headerOpen}
+      onOpenChange={setHeaderOpen}
+      styles={{
+        content: {
+          padding: 0,
+        },
       }}
     >
-      <Button type="text" icon={<LinkOutlined />} />
-    </Attachments>
+      <Attachments
+        beforeUpload={() => false}
+        items={attachedFiles}
+        onChange={handleFileChange}
+        placeholder={(type) =>
+          type === 'drop'
+            ? { title: 'Drop file here' }
+            : {
+                icon: <CloudUploadOutlined />,
+                title: 'Upload files',
+                description: 'Click or drag files to this area to upload',
+              }
+        }
+      />
+    </Sender.Header>
   );
 
   const logoNode = (
@@ -334,17 +360,20 @@ const Independent: React.FC = () => {
         />
       </div>
       <div className={styles.chat}>
-        {/* 🌟 欢迎占位 */}
-        {!items.length && placeholderNode}
         {/* 🌟 消息列表 */}
-        <Bubble.List items={items} roles={roles} className={styles.messages} />
+        <Bubble.List
+          items={items.length > 0 ? items : [{ content: placeholderNode, variant: 'borderless' }]}
+          roles={roles}
+          className={styles.messages}
+        />
         {/* 🌟 提示词 */}
         <Prompts items={senderPromptsItems} onItemClick={onPromptsItemClick} />
         {/* 🌟 输入框 */}
         <Sender
           value={content}
-          onChange={onChange}
+          header={senderHeader}
           onSubmit={onSubmit}
+          onChange={setContent}
           prefix={attachmentsNode}
           loading={agent.isRequesting()}
           className={styles.sender}

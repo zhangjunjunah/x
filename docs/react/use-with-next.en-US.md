@@ -3,7 +3,6 @@ group:
   title: Basic Usage
 order: 3
 title: Usage with Next.js
-tag: Updated
 ---
 
 Here’s the translation of your guide on using `@ant-design/x` with Next.js:
@@ -50,7 +49,7 @@ const Home = () => (
 export default Home;
 ```
 
-You should now see the Bubble component from `@ant-design/x` on your page. You can proceed to use other components to develop your application. For other development processes, you can refer to the [official Next.js documentation](https://nextjs.org/).
+You should now see the Bubble component from `@ant-design/x` on your page. You can proceed to use other components to develop your application. For other development processes, you can refer to the [official Next.js documentation](https://nextjs.org/docs).
 
 You may notice that the `@ant-design/x` component does not have styles on the first screen. Below, we'll address how to handle SSR (Server-Side Rendering) styles for Next.js.
 

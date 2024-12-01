@@ -38,7 +38,7 @@ Use preset protocol for request, protocol is not implemented yet.
 | baseURL | Request for server address | string | - |  |
 | key | Request key | string | - |  |
 | model | Preset protocol model | string | - |  |
-| dangerouslyApiKey | Enabling this option can be dangerous, exposing secret API credentials | string | - | - |
+| dangerouslyApiKey | **🔥 `dangerouslyApiKey` presents security risks. Detailed documentation on this can be found in [Explanation](/docs/react/dangerously-api-key)** | string | - | - |
 
 ### XAgentConfigCustom
 
@@ -53,6 +53,7 @@ Custom request protocol.
 ```tsx | pure
 interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
   messages?: Message[];
+  message?: Message;
 }
 
 type RequestFn<Message> = (
@@ -67,22 +68,7 @@ type RequestFn<Message> = (
 
 ### Agent
 
-| Property     | Description                                | Type           | Version |
-| ------------ | ------------------------------------------ | -------------- | ------- |
-| request      | Call the configured request of `useXAgent` | AgentRequestFn |         |
-| isRequesting | Check if it is requesting                  | () => boolean  |         |
-
-```tsx | pure
-interface AgentRequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
-  messages?: Message[];
-}
-
-type AgentRequestFn<AgentMessage> = (
-  info: AgentRequestFnInfo<Message>,
-  callbacks: {
-    onUpdate: (message: AgentMessage) => void;
-    onSuccess: (message: AgentMessage) => void;
-    onError: (error: Error) => void;
-  },
-) => void;
-```
+| Property     | Description                                | Type          | Version |
+| ------------ | ------------------------------------------ | ------------- | ------- |
+| request      | Call the configured request of `useXAgent` | RequestFn     |         |
+| isRequesting | Check if it is requesting                  | () => boolean |         |

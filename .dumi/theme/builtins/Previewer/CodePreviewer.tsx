@@ -374,7 +374,7 @@ createRoot(document.getElementById('container')).render(<Demo />);
 
   const codeBoxDemoStyle: React.CSSProperties = {
     padding: iframe || compact ? 0 : undefined,
-    overflow: iframe || compact ? 'hidden' : undefined,
+    overflow: iframe || compact ? 'hidden' : 'auto',
     backgroundColor: background === 'grey' ? backgroundGrey : undefined,
   };
 
@@ -390,11 +390,13 @@ createRoot(document.getElementById('container')).render(<Demo />);
       {!simplify && (
         <section className="code-box-meta markdown">
           <div className="code-box-title">
-            <Tooltip title={originDebug ? <FormattedMessage id="app.demo.debug" /> : ''}>
-              <a href={`#${asset.id}`} ref={anchorRef}>
-                {localizedTitle}
-              </a>
-            </Tooltip>
+            {localizedTitle && (
+              <Tooltip title={originDebug ? <FormattedMessage id="app.demo.debug" /> : ''}>
+                <a href={`#${asset.id}`} ref={anchorRef}>
+                  {localizedTitle}
+                </a>
+              </Tooltip>
+            )}
             <EditButton
               title={<FormattedMessage id="app.content.edit-demo" />}
               filename={filename}
