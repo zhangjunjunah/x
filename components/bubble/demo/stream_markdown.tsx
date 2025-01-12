@@ -290,7 +290,10 @@ const App = () => {
   return (
     <div style={{ minHeight: 100, margin: 24 }}>
       <Bubble
-        typing
+        typing={{
+          step: 10,
+          interval: 50,
+        }}
         variant="outlined"
         content={text}
         messageRender={renderMarkdown}
