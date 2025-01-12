@@ -264,7 +264,6 @@ Class A {
 
 const RenderMarkdown = ({ content }: { content: string }) => {
   const instance = useRef<MarkdownEditorInstance | undefined>(undefined);
-  console.log(content);
   useEffect(() => {
     instance.current?.store.updateNodeList(parserMdToSchema(content).schema);
   }, [content]);
