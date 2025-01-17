@@ -106,7 +106,10 @@ const Bubble: React.ForwardRefRenderFunction<BubbleRef, BubbleProps> = (props, r
   );
 
   // ============================ Avatar ============================
-  const avatarNode = React.isValidElement(avatar) ? avatar : <Avatar {...avatar} />;
+  const avatarNode = React.useMemo(
+    () => (React.isValidElement(avatar) ? avatar : <Avatar {...avatar} />),
+    [avatar],
+  );
 
   // =========================== Content ============================
   const mergedContent = React.useMemo(
