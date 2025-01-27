@@ -36,6 +36,24 @@ export interface BubbleListProps extends React.HTMLAttributes<HTMLDivElement> {
   roles?: RolesType;
 }
 
+const BubbleListItem: React.ForwardRefRenderFunction<Record<string, BubbleRef>, BubbleProps> = (
+  props,
+  ref,
+) => (
+  <Bubble
+    {...props}
+    ref={(node) => {
+      if (node) {
+        (ref as React.RefObject<Record<string, BubbleRef>>).current[props.id!] = node;
+      } else {
+        delete (ref as React.RefObject<Record<string, BubbleRef>>).current?.[props.id!];
+      }
+    }}
+  />
+);
+
+const MemoBubbleListItem = React.memo(React.forwardRef(BubbleListItem));
+
 const TOLERANCE = 1;
 
 const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps> = (props, ref) => {
@@ -179,16 +197,10 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
         onScroll={onInternalScroll}
       >
         {mergedData.map(({ key, ...bubble }) => (
-          <Bubble
+          <MemoBubbleListItem
             {...bubble}
             key={key}
-            ref={(node) => {
-              if (node) {
-                bubbleRefs.current[key] = node;
-              } else {
-                delete bubbleRefs.current[key];
-              }
-            }}
+            ref={bubbleRefs}
             typing={initialized ? bubble.typing : false}
           />
         ))}
