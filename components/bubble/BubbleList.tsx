@@ -36,17 +36,21 @@ export interface BubbleListProps extends React.HTMLAttributes<HTMLDivElement> {
   roles?: RolesType;
 }
 
-const BubbleListItem: React.ForwardRefRenderFunction<Record<string, BubbleRef>, BubbleProps> = (
-  props,
-  ref,
-) => (
+interface BubbleListItemProps extends BubbleProps {
+  _key?: BubbleDataType['key'];
+}
+
+const BubbleListItem: React.ForwardRefRenderFunction<
+  Record<string, BubbleRef>,
+  BubbleListItemProps
+> = ({ _key, ...restProps }, ref) => (
   <Bubble
-    {...props}
+    {...restProps}
     ref={(node) => {
       if (node) {
-        (ref as React.RefObject<Record<string, BubbleRef>>).current[props.id!] = node;
+        (ref as React.RefObject<Record<string, BubbleRef>>).current[_key!] = node;
       } else {
-        delete (ref as React.RefObject<Record<string, BubbleRef>>).current?.[props.id!];
+        delete (ref as React.RefObject<Record<string, BubbleRef>>).current?.[_key!];
       }
     }}
   />
@@ -200,6 +204,7 @@ const BubbleList: React.ForwardRefRenderFunction<BubbleListRef, BubbleListProps>
           <MemoBubbleListItem
             {...bubble}
             key={key}
+            _key={key}
             ref={bubbleRefs}
             typing={initialized ? bubble.typing : false}
           />
