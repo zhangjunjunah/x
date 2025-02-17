@@ -60,6 +60,16 @@ interface PlaceholderType {
 | nativeElement | 获取原生节点     | HTMLElement          | -    |
 | upload        | 手工调用上传文件 | (file: File) => void | -    |
 
+### Attachments.FileCard Props
+
+| 属性      | 说明                         | 类型                       | 默认值 | 版本 |
+| --------- | ---------------------------- | -------------------------- | ------ | ---- |
+| prefixCls | 样式类名的前缀               | string                     | -      | -    |
+| className | 样式类名                     | string                     | -      | -    |
+| style     | 样式对象                     | React.CSSProperties        | -      | -    |
+| item      | 附件，同 Upload `UploadFile` | Attachment                 | -      | -    |
+| onRemove  | 附件移除时的回调函数         | (item: Attachment) => void | -      | -    |
+
 ## Semantic DOM
 
 <code src="./demo/_semantic.tsx" simplify="true"></code>

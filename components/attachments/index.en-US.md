@@ -57,6 +57,16 @@ interface PlaceholderType {
 | nativeElement | Get the native node    | HTMLElement          | -       |
 | upload        | Manually upload a file | (file: File) => void | -       |
 
+### Attachments.FileCard Props
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| prefixCls | The prefix of the style class name | string | - | - |
+| className | Style class name | string | - | - |
+| style | Style Object | React.CSSProperties | - | - |
+| item | Attachment, same as Upload `UploadFile` | Attachment | - | - |
+| onRemove | Callback function when attachment is removed | (item: Attachment) => void | - | - |
+
 ## Semantic DOM
 
 <code src="./demo/_semantic.tsx" simplify="true"></code>
