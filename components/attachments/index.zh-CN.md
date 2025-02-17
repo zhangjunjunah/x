@@ -3,7 +3,7 @@ category: Components
 group:
   title: 表达
   order: 2
-title: Attachment
+title: Attachments
 subtitle: 输入附件
 description: 用于展示一组附件信息集合。
 cover: https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*5l2oSKBXatAAAAAAAAAAAAAADgCCAQ/original
@@ -14,7 +14,7 @@ demo:
 
 ## 何时使用
 
-Attachment 组件用于需要展示一组附件信息集合的场景。
+Attachments 组件用于需要展示一组附件信息集合的场景。
 
 ## 代码演示
 
@@ -29,7 +29,7 @@ Attachment 组件用于需要展示一组附件信息集合的场景。
 
 通用属性参考：[通用属性](/docs/react/common-props)。
 
-### AttachmentProps
+### AttachmentsProps
 
 继承 antd [Upload](https://ant.design/components/upload) 属性。
 
@@ -66,4 +66,4 @@ interface PlaceholderType {
 
 ## 主题变量（Design Token）
 
-<ComponentTokenTable component="Prompts"></ComponentTokenTable>
+<ComponentTokenTable component="Attachments"></ComponentTokenTable>

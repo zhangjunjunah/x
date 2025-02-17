@@ -3,7 +3,7 @@ category: Components
 group:
   title: Express
   order: 2
-title: Attachment
+title: Attachments
 description: Display the collection of attachment information.
 cover: https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*5l2oSKBXatAAAAAAAAAAAAAADgCCAQ/original
 coverDark: https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*N8QHQJhgfbEAAAAAAAAAAAAADgCCAQ/original
@@ -13,7 +13,7 @@ demo:
 
 ## When To Use
 
-The Prompts component is used to display a predefined set of questions or suggestion that are relevant to the current context.
+The Attachments component is used in scenarios where a set of attachment information needs to be displayed.
 
 ## Examples
 
@@ -26,7 +26,7 @@ The Prompts component is used to display a predefined set of questions or sugges
 
 ## API
 
-### AttachmentProps
+### AttachmentsProps
 
 For more properties, see [Upload](https://ant.design/components/upload).
 
@@ -63,4 +63,4 @@ interface PlaceholderType {
 
 ## Design Token
 
-<ComponentTokenTable component="Prompts"></ComponentTokenTable>
+<ComponentTokenTable component="Attachments"></ComponentTokenTable>
