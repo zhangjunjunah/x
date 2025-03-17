@@ -1,0 +1,21 @@
+{
+  "assets": {
+    "-async.js": "/8b232337-async.d6c25a76.js",
+    "-async.js.map": "/8b232337-async.d6c25a76.js.map",
+    ".gitkeep.": "/.gitkeep.d41d8cd9.",
+    "common-async.js": "/common-async.cb322f30.js",
+    "common-async.js.map": "/common-async.cb322f30.js.map",
+    "umi.css": "/umi.ed690379.css",
+    "umi.css.map": "/umi.ed690379.css.map",
+    "umi.js": "/umi.3c5e18bc.js",
+    "umi.js.map": "/umi.3c5e18bc.js.map",
+    "vendors_0-async.css": "/vendors_0-async.b90d5961.css",
+    "vendors_0-async.css.map": "/vendors_0-async.b90d5961.css.map",
+    "vendors_0-async.js": "/vendors_0-async.9f11dc5d.js",
+    "vendors_0-async.js.map": "/vendors_0-async.9f11dc5d.js.map",
+    "vendors_1-async.css": "/vendors_1-async.6cf5ec96.css",
+    "vendors_1-async.css.map": "/vendors_1-async.6cf5ec96.css.map",
+    "vendors_1-async.js": "/vendors_1-async.aa6e6595.js",
+    "vendors_1-async.js.map": "/vendors_1-async.aa6e6595.js.map"
+  }
+}
