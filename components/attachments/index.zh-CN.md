@@ -44,6 +44,7 @@ Attachments 组件用于需要展示一组附件信息集合的场景。
 | rootClassName | 根节点的样式类名 | string | - | - |
 | rootStyle | 根节点的样式对象 | React.CSSProperties | - | - |
 | styles | 自定义样式对象，[见下](#semantic-dom) | Record<string, React.CSSProperties> | - | - |
+| imageProps | 图片属性，同 antd [Image](https://ant.design/components/image) 属性 | ImageProps | - | - |
 
 ```tsx | pure
 interface PlaceholderType {
@@ -62,13 +63,14 @@ interface PlaceholderType {
 
 ### Attachments.FileCard Props
 
-| 属性      | 说明                         | 类型                       | 默认值 | 版本 |
-| --------- | ---------------------------- | -------------------------- | ------ | ---- |
-| prefixCls | 样式类名的前缀               | string                     | -      | -    |
-| className | 样式类名                     | string                     | -      | -    |
-| style     | 样式对象                     | React.CSSProperties        | -      | -    |
-| item      | 附件，同 Upload `UploadFile` | Attachment                 | -      | -    |
-| onRemove  | 附件移除时的回调函数         | (item: Attachment) => void | -      | -    |
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| prefixCls | 样式类名的前缀 | string | - | - |
+| className | 样式类名 | string | - | - |
+| style | 样式对象 | React.CSSProperties | - | - |
+| item | 附件，同 Upload `UploadFile` | Attachment | - | - |
+| onRemove | 附件移除时的回调函数 | (item: Attachment) => void | - | - |
+| imageProps | 图片属性，同 antd [Image](https://ant.design/components/image) 属性 | ImageProps | - | - |
 
 ## Semantic DOM
 
