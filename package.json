@@ -267,7 +267,8 @@
     "vanilla-tilt": "^1.8.1",
     "web-streams-polyfill": "^4.0.0",
     "webpack": "^5.94.0",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "webpack-bundle-analyzer": "^4.10.2",
+    "esbuild": "0.25.1"
   },
   "peerDependencies": {
     "antd": "^5.20.3",
