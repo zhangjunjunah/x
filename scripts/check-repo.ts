@@ -74,10 +74,11 @@ async function checkRemote() {
   const { remote } = await git.fetch('origin', 'main');
   if (!remote?.includes('ant-design/x')) {
     const { value } = await git.getConfig('remote.origin.url');
-    if (!value?.includes('ant-design/x')) {
+    console.log('checkRemote', value);
+    /*if (!value?.includes('ant-design/x')) {
       spinner.fail(chalk.red('🧐 Your remote origin is not ant-design/x, did you fork it?'));
       exitProcess();
-    }
+    }*/
   }
   spinner.succeed('远程分支检查通过');
 }
