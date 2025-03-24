@@ -1,6 +1,6 @@
 {
   "name": "@ant-design/x",
-  "version": "1.0.6",
+  "version": "1.0.6c",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -12,11 +12,11 @@
   ],
   "homepage": "https://x.ant.design",
   "bugs": {
-    "url": "https://github.com/ant-design/x/issues"
+    "url": "https://github.com/zhangjunjunah/x/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ant-design/x"
+    "url": "https://github.com/zhangjunjunah/x"
   },
   "funding": {
     "type": "opencollective",
